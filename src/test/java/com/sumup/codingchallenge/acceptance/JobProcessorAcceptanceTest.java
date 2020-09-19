@@ -17,17 +17,34 @@ class JobProcessorAcceptanceTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private final String inputJson = "{\"tasks\":[{\"name\":\"task-1\",\"command\":\"touch /tmp/file1\"},{\"name\":\"task-2\",\"command\":\"cat /tmp/file1\",\"requires\":[\"task-3\"]},{\"name\":\"task-3\",\"command\":\"echo 'Hello World!' > /tmp/file1\",\"requires\":[\"task-1\"]},{\"name\":\"task-4\",\"command\":\"rm /tmp/file1\",\"requires\":[\"task-2\",\"task-3\"]}]}";
+
     @Test
-    void contextLoads() throws Exception {
-        String inputJson = "{\"tasks\":[{\"name\":\"task-1\",\"command\":\"touch /tmp/file1\"},{\"name\":\"task-2\",\"command\":\"cat /tmp/file1\",\"requires\":[\"task-3\"]},{\"name\":\"task-3\",\"command\":\"echo 'Hello World!' > /tmp/file1\",\"requires\":[\"task-1\"]},{\"name\":\"task-4\",\"command\":\"rm /tmp/file1\",\"requires\":[\"task-2\",\"task-3\"]}]}";
-        String outputJson = "[{\"name\":\"task-1\",\"command\":\"touch /tmp/file1\",\"requires\":null},{\"name\":\"task-3\",\"command\":\"echo 'Hello World!' > /tmp/file1\",\"requires\":[\"task-1\"]},{\"name\":\"task-2\",\"command\":\"cat /tmp/file1\",\"requires\":[\"task-3\"]},{\"name\":\"task-4\",\"command\":\"rm /tmp/file1\",\"requires\":[\"task-2\",\"task-3\"]}]";
+    void givenRunningApplication_WhenRequestReceived_ThenReturnExpectedJsonOutput() throws Exception {
+        String expectedJson = "[{\"name\":\"task-1\",\"command\":\"touch /tmp/file1\",\"requires\":null},{\"name\":\"task-3\",\"command\":\"echo 'Hello World!' > /tmp/file1\",\"requires\":[\"task-1\"]},{\"name\":\"task-2\",\"command\":\"cat /tmp/file1\",\"requires\":[\"task-3\"]},{\"name\":\"task-4\",\"command\":\"rm /tmp/file1\",\"requires\":[\"task-2\",\"task-3\"]}]";
 
 
-        mockMvc.perform(post("/sort-task")
+        mockMvc.perform(post("/sort-task/json")
                 .contentType("application/json")
                 .content(inputJson))
                 .andExpect(status().isOk())
-                .andExpect(content().json(outputJson));
+                .andExpect(content().json(expectedJson));
+
+    }
+
+    @Test
+    void givenRunningApplication_WhenRequestReceived_ThenReturnExpectedTextOutput() throws Exception {
+        String expectedString = "touch /tmp/file1\n" +
+                "echo 'Hello World!' > /tmp/file1\n" +
+                "cat /tmp/file1\n" +
+                "rm /tmp/file1\n";
+
+
+        mockMvc.perform(post("/sort-task/bash")
+                .contentType("application/json")
+                .content(inputJson))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedString));
 
     }
 }
