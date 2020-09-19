@@ -10,7 +10,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 @Component
 public class JobSorter {
 
-    public ArrayList<Task> sort(List<Task> unorderedTasks){
+    public List<Task> sort(List<Task> unorderedTasks){
         //sort
         ArrayList<Task> sortedTasks = new ArrayList<>(unorderedTasks.size());
         ArrayList<String> sortedTaskNames = new ArrayList<>(unorderedTasks.size());
