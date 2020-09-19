@@ -3,13 +3,14 @@ package com.sumup.codingchallenge;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 @Component
 public class JobSorter {
 
-    public ArrayList<Task> sort(ArrayList<Task> unorderedTasks){
+    public ArrayList<Task> sort(List<Task> unorderedTasks){
         //sort
         ArrayList<Task> sortedTasks = new ArrayList<>(unorderedTasks.size());
         ArrayList<String> sortedTaskNames = new ArrayList<>(unorderedTasks.size());
