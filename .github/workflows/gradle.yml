@@ -1,4 +1,4 @@
-name: Gradle CI with Github Actions
+name: Build
 
 on: push
 jobs:
