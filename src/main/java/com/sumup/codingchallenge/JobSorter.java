@@ -11,21 +11,19 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class JobSorter {
 
     public List<Task> sort(List<Task> unorderedTasks){
-        //sort
-        ArrayList<Task> sortedTasks = new ArrayList<>(unorderedTasks.size());
-        ArrayList<String> sortedTaskNames = new ArrayList<>(unorderedTasks.size());
+        List<Task> sortedTasks = new ArrayList<>(unorderedTasks.size());
+        List<String> sortedTaskNames = new ArrayList<>(unorderedTasks.size());
 
-        //put in queue
         Queue<Task> taskQueue = new ArrayBlockingQueue<>(unorderedTasks.size());
         taskQueue.addAll(unorderedTasks);
 
         while(!taskQueue.isEmpty()) {
-            Task taskIterator = taskQueue.poll();
-            if(taskIterator.getRequires() == null || sortedTaskNames.containsAll(taskIterator.getRequires())){
-                sortedTasks.add(taskIterator);
-                sortedTaskNames.add(taskIterator.getName());
+            Task topTask = taskQueue.poll();
+            if(topTask.getRequires() == null || sortedTaskNames.containsAll(topTask.getRequires())){
+                sortedTasks.add(topTask);
+                sortedTaskNames.add(topTask.getName());
             } else {
-                taskQueue.add(taskIterator);
+                taskQueue.add(topTask);
             }
         }
         return sortedTasks;

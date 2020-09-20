@@ -25,13 +25,10 @@ public class JobProcessingResource {
     @PostMapping("/json")
     public ResponseEntity<Object> jobProcessor(@RequestBody Map<String, List<Task>> payload) {
         //parse and validate
-        System.out.println(payload);
         List<Task> tasks = payload.get("tasks");
 
         if(!validator.isValidJson(tasks)){
-            Map<String, Object> body = new HashMap<>();
-            body.put("message", "A required task is not present in the list of tasks to be performed");
-            return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+            return handleInvalidJson();
         }
 
         //sort
@@ -47,9 +44,7 @@ public class JobProcessingResource {
         List<Task> tasks = payload.get("tasks");
 
         if (!validator.isValidJson(tasks)) {
-            Map<String, Object> body = new HashMap<>();
-            body.put("message", "A required task is not present in the list of tasks to be performed");
-            return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+            return handleInvalidJson();
         }
 
         //sort
@@ -61,6 +56,12 @@ public class JobProcessingResource {
             result.append("\n");
         }
         return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+    private ResponseEntity<Object> handleInvalidJson() {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "A required task is not present in the list of tasks to be performed");
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
 }
