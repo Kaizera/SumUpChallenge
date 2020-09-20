@@ -8,7 +8,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +26,6 @@ class JobProcessingResourceTest {
     private JobSorter jobSorterMock;
 
     @InjectMocks
-    @Resource
     private JobProcessingResource underTest;
 
     private final List<Task> tasks = createTaskList(ENTRY1,ENTRY2,ENTRY3);
