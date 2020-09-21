@@ -13,10 +13,9 @@ the coding challenge can be found in this [PDF](readme-resources/SumUp_coding_ch
 
 ## Interact with the app
 
-In order to send a request to the app it has to be started with this command from the root directory:
-```bash
-./gradlew run 
-```
+In order to send a request to the app it has to be started either by running `bootRun` from the gradle menu or my running
+the `CodingChallengeApplication` class.
+
 Shortly the app will start, and it will be able to receive requests on port `8080` to it. Two endpoints are available 
 `/sort-task/json` and `/sort-task/bash`. The former one returns the sorted task in a json format while the latter
 returns a bash script representation which you could run straight away:
