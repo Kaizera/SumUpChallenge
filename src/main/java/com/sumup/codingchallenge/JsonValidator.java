@@ -7,8 +7,15 @@ import java.util.List;
 
 @Component
 public class JsonValidator {
+    public static final String NULLTASKSMESSAGE = "The request should contain a list of 'tasks'";
+    public static final String MISSINGREQUIREDTASKMESSAGE = "A required task is not present in the list of tasks to be performed";
 
-    public boolean isValidJson(List<Task> tasks){
+    public ValidationResult isValidJson(List<Task> tasks){
+
+        if(tasks == null){
+            return new ValidationResult(NULLTASKSMESSAGE, false);
+        }
+
         List<String> taskNames = new ArrayList<>();
         List<String> requireList = new ArrayList<>();
 
@@ -19,6 +26,7 @@ public class JsonValidator {
             }
         }
 
-        return taskNames.containsAll(requireList);
+        boolean isValid = taskNames.containsAll(requireList);
+        return new ValidationResult(MISSINGREQUIREDTASKMESSAGE, isValid);
     }
 }

@@ -39,7 +39,7 @@ class JobProcessingResourceTest {
     @Test
     void givenListIsValidAndListSorted_WhenJobProcessed_ThenReturnOkAndCorrectBody() {
         //given
-        when(jsonValidatorMock.isValidJson(any())).thenReturn(true);
+        when(jsonValidatorMock.isValidJson(any())).thenReturn(new ValidationResult("", true));
 
         //when
         ResponseEntity<Object> response = underTest.jobProcessor(Map.of("tasks", tasks));
@@ -52,12 +52,14 @@ class JobProcessingResourceTest {
     @Test
     void givenListIsNotValidAndListSorted_WhenJobProcessed_ThenReturnBadRequest() {
         //given
-        when(jsonValidatorMock.isValidJson(any())).thenReturn(false);
+        String errorMessage = "error-message";
+        when(jsonValidatorMock.isValidJson(any())).thenReturn(new ValidationResult(errorMessage, false));
 
         //when
         ResponseEntity<Object> response = underTest.jobProcessor(Map.of("tasks", tasks));
 
         //then
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(response.getBody(), Map.of("message",errorMessage));
     }
 }

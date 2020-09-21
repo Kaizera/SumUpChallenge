@@ -27,8 +27,9 @@ public class JobProcessingResource {
         //parse and validate
         List<Task> tasks = payload.get("tasks");
 
-        if(!validator.isValidJson(tasks)){
-            return handleInvalidJson();
+        ValidationResult validationResult = validator.isValidJson(tasks);
+        if(!validationResult.isValid()){
+            return handleInvalidJson(validationResult.getMessage());
         }
 
         //sort
@@ -43,8 +44,9 @@ public class JobProcessingResource {
         //parse and validate
         List<Task> tasks = payload.get("tasks");
 
-        if (!validator.isValidJson(tasks)) {
-            return handleInvalidJson();
+        ValidationResult validationResult = validator.isValidJson(tasks);
+        if(!validationResult.isValid()){
+            return handleInvalidJson(validationResult.getMessage());
         }
 
         //sort
@@ -58,10 +60,9 @@ public class JobProcessingResource {
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
-    private ResponseEntity<Object> handleInvalidJson() {
+    private ResponseEntity<Object> handleInvalidJson(String message) {
         Map<String, Object> body = new HashMap<>();
-        body.put("message", "A required task is not present in the list of tasks to be performed");
+        body.put("message", message);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
-
 }

@@ -1,13 +1,13 @@
 package com.sumup.codingchallenge;
 
-
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.sumup.codingchallenge.JsonValidator.MISSINGREQUIREDTASKMESSAGE;
+import static com.sumup.codingchallenge.JsonValidator.NULLTASKSMESSAGE;
 import static com.sumup.codingchallenge.Util.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class JsonValidatorTest {
     private final JsonValidator underTest = new JsonValidator();
@@ -18,10 +18,10 @@ class JsonValidatorTest {
         List<Task> validList = createTaskList(ENTRY3,ENTRY1);
 
         //when
-        boolean check = underTest.isValidJson(validList);
+        ValidationResult validationResult = underTest.isValidJson(validList);
 
         //then
-        assertTrue(check);
+        assertTrue(validationResult.isValid());
     }
 
     @Test
@@ -30,10 +30,24 @@ class JsonValidatorTest {
         List<Task> validList = createTaskList(ENTRY3,ENTRY2);
 
         //when
-        boolean check = underTest.isValidJson(validList);
+        ValidationResult validationResult = underTest.isValidJson(validList);
 
         //then
-        assertFalse(check);
+        assertFalse(validationResult.isValid());
+        assertEquals(MISSINGREQUIREDTASKMESSAGE, validationResult.getMessage());
+    }
+
+    @Test
+    void givenNullTaskList_WhenValidating_IsNotValid() {
+        //given
+        List<Task> validList = null;
+
+        //when
+        ValidationResult validationResult = underTest.isValidJson(validList);
+
+        //then
+        assertFalse(validationResult.isValid());
+        assertEquals(NULLTASKSMESSAGE, validationResult.getMessage());
     }
 
 }
